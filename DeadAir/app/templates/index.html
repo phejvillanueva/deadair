@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DeadAir - Remove dead air. Keep the story.</title>
+  <meta name="description" content="Automatically remove dead air from talking-head, UGC, VSL, podcast, and interview videos. Runs locally with FFmpeg.">
+  <link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/static/app.css">
+</head>
+<body>
+  <main class="wrap">
+    <header class="masthead">
+      <svg class="glyph" viewBox="0 0 64 24" aria-hidden="true">
+        <path d="M0 12h22l3-9 5 18 4-14 3 5h27" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <div>
+        <h1>DeadAir</h1>
+        <p class="tagline">Remove dead air. Keep the story.</p>
+      </div>
+    </header>
+
+    <div id="banner" class="banner" role="alert" hidden></div>
+
+    <section class="panel" aria-labelledby="h-video">
+      <h2 id="h-video">Video</h2>
+      <div id="drop" class="drop" tabindex="0" role="button" aria-label="Drop your video here or choose a video">
+        <div class="drop-main">Drop your video here</div>
+        <div class="drop-sub">or <button type="button" id="choose" class="link">Choose Video</button> &nbsp;MP4, MOV, MKV, WebM, AVI</div>
+        <div id="upload-progress" class="bar" hidden><span></span></div>
+        <input id="file" type="file" accept=".mp4,.mov,.mkv,.webm,.avi,video/*" hidden>
+      </div>
+      <dl id="info" class="info" hidden>
+        <div class="wide"><dt>File</dt><dd id="i-name"></dd></div>
+        <div><dt>Duration</dt><dd id="i-duration"></dd></div>
+        <div><dt>Size</dt><dd id="i-size"></dd></div>
+        <div><dt>Resolution</dt><dd id="i-res"></dd></div>
+        <div><dt>Frame rate</dt><dd id="i-fps"></dd></div>
+      </dl>
+    </section>
+
+    <section class="panel" aria-labelledby="h-detect">
+      <h2 id="h-detect">Silence Detection</h2>
+      <div class="controls">
+        <label>Preset
+          <select id="preset">
+            <option value="natural">Natural</option>
+            <option value="balanced" selected>Balanced</option>
+            <option value="aggressive">Aggressive</option>
+            <option value="custom" hidden>Custom</option>
+          </select>
+        </label>
+        <label>Threshold
+          <select id="threshold">
+            <option value="-20">-20 dB</option><option value="-25">-25 dB</option>
+            <option value="-30" selected>-30 dB</option><option value="-35">-35 dB</option><option value="-40">-40 dB</option>
+          </select>
+        </label>
+        <label>Minimum silence
+          <select id="minsil">
+            <option value="0.3">0.3s</option><option value="0.5" selected>0.5s</option><option value="0.7">0.7s</option>
+            <option value="1">1.0s</option><option value="1.5">1.5s</option><option value="2">2.0s</option>
+          </select>
+        </label>
+        <label>Padding
+          <select id="padding">
+            <option value="0">0s</option><option value="0.1">0.1s</option><option value="0.15" selected>0.15s</option>
+            <option value="0.25">0.25s</option><option value="0.5">0.5s</option>
+          </select>
+        </label>
+      </div>
+      <p class="hint">Quieter than the threshold for longer than the minimum counts as dead air. Padding keeps a little breathing room on each side of every cut.</p>
+      <div class="actions">
+        <button id="detect" class="btn primary" disabled>Detect Silence</button>
+        <div id="detect-progress" class="bar" hidden><span></span></div>
+        <span id="detect-status" class="status" aria-live="polite"></span>
+      </div>
+    </section>
+
+    <section id="results" class="panel" aria-labelledby="h-results" hidden>
+      <h2 id="h-results">Detected Silence</h2>
+      <p id="summary" class="summary"></p>
+      <div id="timeline-wrap" hidden>
+        <div id="timeline" class="timeline" role="img" aria-label="Timeline of kept and removed sections"></div>
+        <div id="ruler" class="ruler" aria-hidden="true"></div>
+        <div class="legend">
+          <span><i class="sw kept"></i>Kept <b id="lg-kept"></b></span>
+          <span><i class="sw cut"></i>Removed <b id="lg-cut"></b></span>
+        </div>
+      </div>
+      <ul id="list" class="list"></ul>
+      <p id="total" class="total" hidden>Total silence: <b id="total-val"></b></p>
+    </section>
+
+    <section class="panel" aria-labelledby="h-export">
+      <h2 id="h-export">Export</h2>
+      <div class="actions">
+        <button id="export" class="btn primary big" disabled>Export Clean Video</button>
+        <div id="export-progress" class="bar" hidden><span></span></div>
+        <span id="export-status" class="status" aria-live="polite"></span>
+      </div>
+      <div id="done" class="done" hidden>
+        <h3>Done</h3>
+        <dl class="stats">
+          <div><dt>Original</dt><dd id="d-orig"></dd></div>
+          <div><dt>Final</dt><dd id="d-final"></dd></div>
+          <div><dt>Removed</dt><dd id="d-removed"></dd></div>
+        </dl>
+        <p class="path" id="d-path"></p>
+        <p class="warn" id="d-warn" hidden></p>
+        <div class="actions">
+          <button id="open-file" class="btn">Open File</button>
+          <button id="open-folder" class="btn">Open Folder</button>
+        </div>
+      </div>
+    </section>
+
+    <footer class="foot">Everything runs on this computer. Your video is never sent anywhere.</footer>
+  </main>
+  <script src="/static/app.js"></script>
+</body>
+</html>

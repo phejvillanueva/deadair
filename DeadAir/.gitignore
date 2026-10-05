@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+.pytest_cache/
+
+# Secrets / local config
+.env
+.env.*
+
+# DeadAir runtime output and temp files
+output/
+*.partial.mp4
+deadair_filter_*.txt
+
+# Bundled / downloaded FFmpeg (install it separately or drop it in ffmpeg/bin locally)
+ffmpeg/
+
+# Test media and any video files
+*.mp4
+*.mov
+*.mkv
+*.webm
+*.avi
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

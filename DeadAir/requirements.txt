@@ -1,0 +1,4 @@
+# DeadAir has no third-party Python dependencies.
+# It uses only the Python standard library (3.10+) plus the FFmpeg/FFprobe
+# programs. This file exists so `pip install -r requirements.txt` is a
+# harmless no-op and future dependencies have a home.
